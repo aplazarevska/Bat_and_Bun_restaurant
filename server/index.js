@@ -5,13 +5,39 @@ import dotenv from 'dotenv';
 dotenv.config();
 import databaseConnector from './database.js';
 import userRoutes from './routes/userRoutes.js';
+import multer from 'multer';
+import { uploadFile, getFileStream } from './s3';
+import fs from 'fs';
+import utils from 'utils';
+const unlinkFile = utils.promisify(fs.unlink);
+
+// multer destination for the uploads
+const upload = multer({ dest: 'uploads/'})
+
+const app = express();
+
+app.get('/images/:key', (req, res) => {
+  console.log(req.params)
+  const key = req.params.key
+  const readStream = getFileStream(key)
+
+  readStream.pipe(res)
+})
+
+app.post('/images', upload.single('image'), async (req, res) => {
+  const file = req.file
+  console.log(file)
+  const result = await uploadFile(file)
+  await unlinkFile(file.path)
+  console.log(result)
+  const description = req.body.description
+  res.send({imagePath: `/images/${result.Key}`})
+}
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/batnbun';
 const PORT = process.env.PORT || 5000;
 const HOST = '0.0.0.0';
 const __dirname = path.resolve();
-
-const app = express();
 
 app.use(cors());
 
