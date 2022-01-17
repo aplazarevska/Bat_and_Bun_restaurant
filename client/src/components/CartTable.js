@@ -13,12 +13,10 @@ import {
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import {
-  placeholderItems,
   ccyFormat,
   subtotal
 } from '../utils/cartOrderUtils';
 
-const invoiceTotal = subtotal(placeholderItems);
 
 const CartTable = ({
   emptyMessage,
@@ -27,6 +25,7 @@ const CartTable = ({
   addQty,
   minQty
 }) => {
+  const totalCost = subtotal(cartItems);
 
   return (
     cartItems.length > 0
@@ -61,7 +60,7 @@ const CartTable = ({
                       <IconButton
                         aria-label="reduce quantity"
                         className="min-btn"
-                        onClick={() => minQty(item.name)}
+                        onClick={() => minQty(item)}
                       >
                         <RemoveIcon />
                       </IconButton>
@@ -76,7 +75,7 @@ const CartTable = ({
                       <IconButton
                         aria-label="add quantity"
                         className="add-btn"
-                        onClick={() => addQty(item.name)}
+                        onClick={() => addQty(item)}
                       >
                         <AddIcon />
                       </IconButton>
@@ -86,13 +85,13 @@ const CartTable = ({
                     )
                   }  
                 </TableCell>
-                <TableCell align="right">${ccyFormat(10.00)}</TableCell>
+                <TableCell align="right">${ccyFormat(item.price * item.qty)}</TableCell>
               </TableRow>
             ))}
 
             <TableRow>
               <TableCell colSpan={2} align="left" sx={{ fontSize: '1.05em', fontWeight: '700'}}>Total</TableCell>
-              <TableCell align="right" sx={{ fontSize: '1.05em', fontWeight: '700'}}>${ccyFormat(invoiceTotal)}</TableCell>
+              <TableCell align="right" sx={{ fontSize: '1.05em', fontWeight: '700'}}>${ccyFormat(totalCost)}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

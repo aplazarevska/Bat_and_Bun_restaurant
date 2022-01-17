@@ -4,7 +4,6 @@ exports[`Matches snapshot 1`] = `
 <div
   data-testid="embed-map"
   id="embed-map"
-  onClick={[Function]}
   style={
     Object {
       "backgroundImage": "url(./img/bat-bun-map.jpg)",

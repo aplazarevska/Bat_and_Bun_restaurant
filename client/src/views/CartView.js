@@ -23,15 +23,15 @@ const CartView = () => {
   }, [cartItems]);
 
   const deleteFromCart = (item) => {
-    dispatch({type: CART_REMOVE, payload: item})
+    dispatch({type: CART_REMOVE, payload: item});
   };
 
-  const addQty = (itemName) => {
-    dispatch({type: CART_ADD, payload: {name: itemName, qty: 1}})
+  const addQty = (item) => {
+    dispatch({type: CART_ADD, payload: {...item, qty: 1}});
   };
 
-  const minQty = (itemName) => {
-    dispatch({type: CART_ADD, payload: {name: itemName, qty: -1}})
+  const minQty = (item) => {
+    dispatch({type: CART_ADD, payload: {...item, qty: -1}});
   };
 
   return (

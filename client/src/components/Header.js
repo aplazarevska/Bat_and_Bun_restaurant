@@ -70,7 +70,7 @@ const Header = () => {
       <StyledToolbar>
         <div>
           <img
-            src="./img/bat-bun-logo.png"
+            src="/img/bat-bun-logo.png"
             alt="Bat + Bun Logo"
             className="logo"
             onClick={e => window.location.href='/'}

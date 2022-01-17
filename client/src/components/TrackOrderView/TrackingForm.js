@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Alert,
   TextField,
@@ -15,14 +16,23 @@ const TrackingForm = ({ setTrackResult }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setOrderReference('');
+    setPhone('');
+
     try {
       setError('');
       setLoading(true);
 
-      console.log(orderReference, phone);
-      // await trackOrder(orderReference, phone);
-
-      setTrackResult('test');
+      // Send order reference instead of order id, and phone number (stripped) as query
+      axios.get(`/orders/${orderReference}?phone=${phone.trim().split('').filter(n => !n.match(/[^0-9]/g)).join('')}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((result) => setTrackResult(result.data[0]))
+      .catch((error) => {
+        console.error(error);
+      });
     } catch (err) {
       setError("Error tracking the order.");
       console.log(err);
@@ -44,6 +54,7 @@ const TrackingForm = ({ setTrackResult }) => {
             name="orderReference"
             fullWidth
             margin="normal"
+            value={orderReference}
             required
             onChange={e => setOrderReference(e.target.value)}
           />
@@ -53,6 +64,7 @@ const TrackingForm = ({ setTrackResult }) => {
             name="phone"
             fullWidth
             margin="normal"
+            value={phone}
             required
             onChange={e => setPhone(e.target.value)}
           />

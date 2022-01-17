@@ -14,6 +14,7 @@ body {
 
 main {
   min-height: 85vh;
+  overflow-x: hidden;
 }
 
 /* Typography */
@@ -151,6 +152,12 @@ section {
 
   .item-detail-card {
     margin-bottom: 2.5em;
+
+    .MuiCardMedia-root {
+      max-width: 150px;
+      max-height: 100px;
+      margin: 0 auto;
+    }
 
     .MuiCardContent-root {
       padding-bottom: 0.35em;
@@ -382,6 +389,86 @@ section {
   }
 }
 
+/* Admin */
+#DashboardView {
+  h1,
+  h2,
+  h3 {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 3em;
+    margin-top: 1em;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin-top: 2.5em;
+    margin-bottom: .5em;
+  }
+
+  h3 {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: .5em;
+  }
+
+  table {
+    margin: 0 auto 2em;
+  }
+
+  .order-action-dropdown {
+    margin: 3em auto;
+  }
+
+  .order-grid {
+    height: 400px;
+    width: 100%;
+    margin-bottom: 3em;
+  }
+
+  .order-record {
+    margin-bottom: 3em;
+  }
+
+  .admin-menu-drawer {
+    > div {
+      position: relative;
+      height: 100%;
+    }
+  
+    .MuiDrawer-paperAnchorDockedLeft {
+      > ul {
+        width: 100%;
+  
+        div {
+          height: 68px;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  
+    .list-active {
+      background: #f4f4f4 !important;
+    }
+  }
+
+  .item-form {
+    width: 80%;
+    max-width: 500px;
+    margin: 0 auto;
+
+    .item-image-display img {
+      display: block;
+      max-width: 150px;
+      height: auto;
+      margin-top: 5px;
+    }
+  }
+}
+
 /* Cart View */
 #CartView {
   .MuiContainer-root {
@@ -423,6 +510,20 @@ section {
     align-items: center;
   }
 
+  .card-details {
+    margin-top: 1.5em;
+
+    > p:not(:first-child) {
+      position: relative;
+      display: inline-block;
+      width: 50%;
+    }
+
+    .StripeElement {
+      margin-top: .25em;
+    }
+  }
+
   .customer-details-form {
     form {
       display: flex;
@@ -460,6 +561,11 @@ section {
 
 /* Track Order View */
 #TrackOrderView {
+  width: 80%;
+  max-width: 500px;
+  padding-bottom: 5em;
+  margin: 0 auto;
+  
   .MuiContainer-root {
     padding: 5em 0;
     width: 80%;
@@ -510,6 +616,11 @@ footer {
   /* Home View: Menu Item List */
   #menu-item-list {
     .item-detail-card {
+      .MuiCardMedia-root {
+        max-width: 300px;
+        max-height: 175px;
+      }
+
       .MuiCardActions-root {
         > div {
           .qty-number {
@@ -560,9 +671,38 @@ footer {
       }
     }
   }
+
+  /* Admin */
+  #DashboardView {
+    .admin-menu-drawer {
+      .MuiDrawer-paperAnchorDockedLeft {
+        > div {
+          margin-right: 7px;
+        }
+  
+        > ul {
+          align-self: flex-start;
+          
+          .MuiListItemIcon-root {
+            padding-left: 7px;
+          }
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 900px) {
+  /* Home View: Menu Item List */
+  #menu-item-list {
+    .item-detail-card {
+      .MuiCardMedia-root {
+        max-width: 400px;
+        max-height: 250px;
+      }
+    }
+  }
+
   /* Home View: Embed Map */
   #embed-map {
     height: 500px;

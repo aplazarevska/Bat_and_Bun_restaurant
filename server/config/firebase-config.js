@@ -1,9 +1,13 @@
-// import dotenv from 'dotenv';
-// dotenv.config();
-// import { initializeApp } from 'firebase-admin/app';
+const dotenv = require('dotenv');
+dotenv.config();
+const admin = require('firebase-admin');
 
-// const admin = initializeApp({
-//   credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS))
-// });
+admin.initializeApp(
+  {
+    credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS))
+  }
+);
 
-// export default admin;
+module.exports = {
+  admin
+};

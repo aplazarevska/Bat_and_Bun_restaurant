@@ -1,19 +1,32 @@
-// import admin from '../config/firebase-config.js';
+const { admin } = require("../config/firebase-config");
 
-// export const protect = async (req, res, next) => {
-//   const idToken = await req.headers.authorization.split(' ')[1];
+async function protect(req, res, next) {
+  const authHeader = req.headers.authorization;
 
-//   try {
-//     admin.getAuth().verifyIdToken(idToken)
-//     .then((decodedToken) => {
-//       if (decodedToken) {
-//         return next();
-//       }
+  const idToken = authHeader ? authHeader.split(" ")[1] : null;
 
-//       return res.json({ message: "Unauthorized" });
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.json({ message: `Internal error: ${err}`});
-//   }
-// }
+  if (!idToken) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    admin
+      .auth()
+      .verifyIdToken(idToken)
+      .then((decodedToken) => {
+        if (decodedToken) {
+          return next();
+        }
+
+        return res.status(401).json({ message: "Unauthorized" });
+      })
+      .catch((err) => console.log(err));
+  } catch (err) {
+    console.log(err);
+    return res.json({ message: `Internal error: ${err}` });
+  }
+};
+
+module.exports = {
+  protect
+};

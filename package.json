@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "description": "MERN restaurant web app",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node ./server/index.js",
     "server": "nodemon ./server/index.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest ./server --maxWorkers=1 --detectOpenHandles --forceExit",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
@@ -24,15 +23,22 @@
   "homepage": "https://github.com/pduong987/Bat_and_Bun_restaurant#readme",
   "devDependencies": {
     "concurrently": "^6.4.0",
+    "jest": "26.6.0",
+    "mongodb-memory-server": "^8.1.0",
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.0"
+    "supertest": "^6.2.1"
   },
   "dependencies": {
+    "@mui/x-data-grid": "^5.2.1",
+    "aws-sdk": "^2.1054.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "firebase": "^9.6.0",
     "firebase-admin": "^10.0.0",
-    "mongoose": "^6.0.13"
+    "mongoose": "^6.0.13",
+    "multer": "^1.4.4",
+    "multer-s3": "^2.10.0",
+    "stripe": "^8.195.0"
   }
 }

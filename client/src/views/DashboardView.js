@@ -1,74 +1,158 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import {
-  Container,
-  Typography,
-  Alert,
-  Button
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  CssBaseline,
+  Divider,
+  IconButton
 } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import LocalDiningIcon from '@mui/icons-material/LocalDining';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 import { useAuth } from '../contexts/AuthContext';
 
-const DashboardView = ({ token }) => {
-  const [error, setError] = useState('');
-  const [data, setData] = useState('');
-  const { currentUser, logout } = useAuth();
+const drawerWidth = 180;
+
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+});
+
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(9)} + 1px)`,
+  },
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+
+const MuiDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    }),
+  }),
+);
+
+const DashboardView = ({ children }) => {
+  const { logout } = useAuth();
+  const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   async function handleLogout() {
-    setError('');
-
     try {
       await logout();
       navigate('/admin-login');
     } catch (err) {
-      setError("Log out failed.");
       console.log(err);
     }
   }
 
-  const fetchData = async (token) => {
-    const res = await axios.get("http://localhost:5000/test", {
-      headers: {
-        Authorization: "Bearer " + token,
-      }
-    });
+  const menuItems = [
+    {
+      text: 'Orders',
+      icon: <ListAltIcon />,
+      path: ""
+    },
+    {
+      text: 'Menu List',
+      icon: <LocalDiningIcon />,
+      path: "menu"
+    }
+  ];
 
-    console.log(res.data);
-    setData(res.data);
+  const handleDrawerOpen = () => {
+    setOpen(true);
   };
 
-  useEffect(() => {
-    currentUser && fetchData(currentUser.accessToken);
-    console.log(currentUser.accessToken);
-  }, [currentUser]);
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div id="DashboardView">
-      <Container>
-        <Typography variant="h1" sx={{ fontSize: '3em' }}>Dashboard</Typography>
-        
-        {/* Show error */}
-        {error && <Alert severity="error">{error}</Alert>}
-
-        {currentUser && <h2>{currentUser.email}</h2>}
-        {currentUser && <h2>{currentUser.accessToken}</h2>}
-
-        {data && data.testContent.map(t => <h3 key={t.propertyOne}>{t.propertyOne}</h3>)}
-
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          margin="normal"
-          onClick={handleLogout}
-        >
-          Log Out
-        </Button>
-      </Container>
-    </div>
-  )
+    <Box id="DashboardView" sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <MuiDrawer variant="permanent" open={open} className="admin-menu-drawer">
+        <DrawerHeader>
+          {open
+            ? (
+              <IconButton onClick={handleDrawerClose} sx={{cursor: 'pointer', justifySelf: 'flex-end'}}>
+                <ChevronLeftIcon />
+              </IconButton>
+            )
+            : (
+              <IconButton onClick={handleDrawerOpen} sx={{cursor: 'pointer'}}>
+                <ChevronRightIcon />
+              </IconButton>
+            )
+          }
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {menuItems.map(menu => (
+            <ListItem
+              button key={menu.text}
+              onClick={() => navigate(menu.path)}
+              className={location.pathname === `/dashboard${menu.path !== '' ? `/${menu.path}`:menu.path}` ? 'list-active' : null}
+            >
+              <ListItemIcon>
+                {menu.icon}
+              </ListItemIcon>
+              <ListItemText primary={menu.text} />
+            </ListItem>
+          ))}
+          <ListItem
+            button
+            onClick={handleLogout}
+          >
+            <ListItemIcon>
+              <LogoutIcon color={'error'} />
+            </ListItemIcon>
+            <ListItemText sx={{color: '#d32f2f'}} primary="Log Out" />
+          </ListItem>
+        </List>
+      </MuiDrawer>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        {children}
+      </Box>
+    </Box>
+  );
 }
 
-export default DashboardView
+export default DashboardView;
